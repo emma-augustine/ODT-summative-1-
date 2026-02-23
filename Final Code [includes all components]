@@ -1,0 +1,39 @@
+from machine import Pin, TouchPad, PWM
+import time
+import random
+import neopixel
+
+touch = TouchPad(Pin(14))
+motor = PWM(Pin(21), Pin.OUT)
+np = neopixel.NeoPixel(Pin(4), 16)
+
+colours = [(255, 70, 0), (255, 215,0), (0, 100, 0)]
+motor.freq(50)
+
+while True:
+    touch_val = touch.read()
+    #print(touch_val)
+    time.sleep(0.5)
+    if touch_val < 200:
+        motor.duty(35)
+        #the orientation of the servo motor is horizontal
+        x = random.randint(0, 2)
+        for i in range (0, 16):
+            np[i] = colours[x]
+            np.write()
+            print("yay")
+            time.sleep(0.02)
+    
+
+    else:
+        motor.duty(110)
+        for i in range(0, 16):
+            np[i] = (255,0,0)
+            time.sleep(0.05)
+            print("wrong")
+        np.write()
+        for num in range (0, 16):
+            np[num] = (0,0,0)
+            time.sleep(0.05)
+            print("off")
+        np.write()
